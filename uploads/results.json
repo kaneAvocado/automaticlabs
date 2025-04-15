@@ -1,0 +1,42 @@
+{
+  "uploaded_files": [
+    {
+      "name": "advanced_solution.py",
+      "size": "1.2 KB",
+      "date": "2025-04-09 22:15:24",
+      "status": "Успешно"
+    },
+    {
+      "name": "basic_solution.py",
+      "size": "744.0 B",
+      "date": "2025-04-09 22:15:24",
+      "status": "Успешно"
+    },
+    {
+      "name": "optimized_solution.py",
+      "size": "1.1 KB",
+      "date": "2025-04-09 22:15:24",
+      "status": "Успешно"
+    }
+  ],
+  "test_results": [
+    {
+      "name": "Сергей",
+      "surname": "Сергеев",
+      "steps": 13,
+      "filename": "advanced_solution.py"
+    },
+    {
+      "name": "Иван",
+      "surname": "Иванов",
+      "steps": 13,
+      "filename": "basic_solution.py"
+    },
+    {
+      "name": "Петр",
+      "surname": "Петров",
+      "steps": 13,
+      "filename": "optimized_solution.py"
+    }
+  ]
+}

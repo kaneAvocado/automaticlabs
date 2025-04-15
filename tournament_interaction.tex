@@ -1,0 +1,38 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{uml}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlactor{Турнирная система}
+\umlobject{Матч 1}
+\umlobject{Матч 2}
+\umlobject{Матч 3}
+\umlobject{Таблица}
+
+\begin{umlcall}[op=Создание матчей]{Турнирная система}{Матч 1}
+\end{umlcall}
+
+\begin{umlcall}[op=Создание матчей]{Турнирная система}{Матч 2}
+\end{umlcall}
+
+\begin{umlcall}[op=Создание матчей]{Турнирная система}{Матч 3}
+\end{umlcall}
+
+\begin{umlcall}[op=Проведение матча]{Матч 1}{Таблица}
+\end{umlcall}
+
+\begin{umlcall}[op=Проведение матча]{Матч 2}{Таблица}
+\end{umlcall}
+
+\begin{umlcall}[op=Проведение матча]{Матч 3}{Таблица}
+\end{umlcall}
+
+\begin{umlcall}[op=Получение результатов]{Турнирная система}{Таблица}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}
+\end{document} 

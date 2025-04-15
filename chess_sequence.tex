@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{uml}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{umlseqdiag}
+\umlactor{Турнирная система}
+\umlobject{Игрок 1}
+\umlobject{Игрок 2}
+\umlobject{Судья}
+
+\begin{umlcall}[op=Инициализация турнира]{Турнирная система}{Турнирная система}
+\end{umlcall}
+
+\begin{umlcall}[op=Создание пары]{Турнирная система}{Судья}
+\end{umlcall}
+
+\begin{umlcall}[op=Первый матч]{Судья}{Игрок 1}
+\begin{umlcall}[op=Ход]{Игрок 1}{Игрок 2}
+\end{umlcall}
+\begin{umlcall}[op=Ход]{Игрок 2}{Игрок 1}
+\end{umlcall}
+\begin{umlcall}[op=Победа]{Игрок 1}{Судья}
+\end{umlcall}
+\end{umlcall}
+
+\begin{umlcall}[op=Второй матч]{Судья}{Игрок 2}
+\begin{umlcall}[op=Ход]{Игрок 2}{Игрок 1}
+\end{umlcall}
+\begin{umlcall}[op=Ход]{Игрок 1}{Игрок 2}
+\end{umlcall}
+\begin{umlcall}[op=Победа]{Игрок 2}{Судья}
+\end{umlcall}
+\end{umlcall}
+
+\begin{umlcall}[op=Подведение итогов]{Судья}{Турнирная система}
+\end{umlcall}
+\end{umlseqdiag}
+\end{tikzpicture}
+\end{document} 

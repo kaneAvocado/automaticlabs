@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шахматный турнир 5x5</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .participant-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .results-table {
+            margin-top: 20px;
+        }
+        .error-message {
+            display: none;
+            margin-top: 10px;
+        }
+        .alert {
+            margin-top: 10px;
+        }
+        .file-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        .file-item:last-child {
+            border-bottom: none;
+        }
+        .file-name {
+            flex-grow: 1;
+            margin-right: 10px;
+            word-break: break-all;
+        }
+        .remove-file {
+            color: #dc3545;
+            cursor: pointer;
+        }
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .drop-zone.dragover {
+            border-color: #0d6efd;
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Шахматный турнир 5x5</h1>
+        
+        <!-- Форма загрузки файлов -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Загрузка функций оценки</h5>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <div class="drop-zone" id="dropZone">
+                            <p class="mb-0">Перетащите файлы сюда или нажмите для выбора</p>
+                            <small class="text-muted">Поддерживаются файлы .py с функцией evaluate_position</small>
+                        </div>
+                        <input type="file" class="form-control" id="evaluationFile" accept=".py" multiple style="display: none;">
+                        <div id="fileList" class="file-list"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Загрузить выбранные файлы</button>
+                    <div id="uploadError" class="alert alert-danger error-message" role="alert"></div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Список участников -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Участники турнира</h5>
+                <div class="participant-list">
+                    <ul class="list-group" id="participantList">
+                        {% for name, _ in participants %}
+                        <li class="list-group-item">{{ name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div id="participantsError" class="alert alert-warning error-message" role="alert">
+                    Для начала турнира необходимо минимум 2 участника
+                </div>
+            </div>
+        </div>
+        
+        <!-- Кнопки управления турниром -->
+        <div class="d-flex justify-content-center gap-2 mb-4">
+            <button id="startTournament" class="btn btn-success" {% if participants|length < 2 %}disabled{% endif %}>
+                Начать турнир
+            </button>
+            <button id="downloadResults" class="btn btn-primary" disabled>
+                Скачать результаты
+            </button>
+        </div>
+        <div id="tournamentError" class="alert alert-danger error-message" role="alert"></div>
+        
+        <!-- Результаты турнира -->
+        <div id="resultsSection" class="card" style="display: none;">
+            <div class="card-body">
+                <h5 class="card-title">Результаты турнира</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped results-table">
+                        <thead>
+                            <tr>
+                                <th>Место</th>
+                                <th>Участник</th>
+                                <th>Очки</th>
+                                <th>Сыграно матчей</th>
+                                <th>Процент побед</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Функция для отображения ошибок
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+
+        // Обработка drag and drop
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('evaluationFile');
+        const fileList = document.getElementById('fileList');
+        const selectedFiles = new Set();
+
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            for (let file of files) {
+                if (file.name.endsWith('.py')) {
+                    selectedFiles.add(file);
+                    updateFileList();
+                } else {
+                    showError('uploadError', `Файл ${file.name} не является Python-файлом`);
+                }
+            }
+        }
+
+        function updateFileList() {
+            fileList.innerHTML = '';
+            selectedFiles.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <span class="file-name">${file.name}</span>
+                    <span class="remove-file" onclick="removeFile('${file.name}')">×</span>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(fileName) {
+            for (let file of selectedFiles) {
+                if (file.name === fileName) {
+                    selectedFiles.delete(file);
+                    break;
+                }
+            }
+            updateFileList();
+        }
+
+        // Обработка загрузки файлов
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (selectedFiles.size === 0) {
+                showError('uploadError', 'Пожалуйста, выберите хотя бы один файл');
+                return;
+            }
+            
+            const formData = new FormData();
+            selectedFiles.forEach(file => {
+                formData.append('files', file);
+            });
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(data.message);
+                    selectedFiles.clear();
+                    updateFileList();
+                    location.reload();
+                } else {
+                    showError('uploadError', data.error);
+                }
+            } catch (error) {
+                showError('uploadError', 'Ошибка при загрузке файлов: ' + error.message);
+            }
+        });
+        
+        // Обработка начала турнира
+        document.getElementById('startTournament').addEventListener('click', async () => {
+            const participants = document.querySelectorAll('#participantList li');
+            if (participants.length < 2) {
+                showError('tournamentError', 'Для начала турнира необходимо минимум 2 участника');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/start_tournament', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const resultsSection = document.getElementById('resultsSection');
+                    const resultsTable = document.getElementById('resultsTable');
+                    const downloadButton = document.getElementById('downloadResults');
+                    
+                    resultsTable.innerHTML = '';
+                    data.results.forEach((result, index) => {
+                        const stats = data.statistics[result[0]];
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td>${result[0]}</td>
+                            <td>${result[1].toFixed(1)}</td>
+                            <td>${stats.matches_played}</td>
+                            <td>${(stats.win_rate * 100).toFixed(1)}%</td>
+                        `;
+                        resultsTable.appendChild(row);
+                    });
+                    
+                    resultsSection.style.display = 'block';
+                    downloadButton.disabled = false;
+                } else {
+                    showError('tournamentError', data.error);
+                }
+            } catch (error) {
+                showError('tournamentError', 'Ошибка при проведении турнира: ' + error.message);
+            }
+        });
+        
+        document.getElementById('downloadResults').addEventListener('click', () => {
+            window.location.href = '/download_results';
+        });
+
+        // Показываем предупреждение о количестве участников
+        const participants = document.querySelectorAll('#participantList li');
+        if (participants.length < 2) {
+            document.getElementById('participantsError').style.display = 'block';
+        }
+    </script>
+</body>
+</html> 

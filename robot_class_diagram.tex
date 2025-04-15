@@ -1,0 +1,30 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{uml}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{umlclass}[x=0,y=0]{Robot}
+    - board: list \\
+    - x: int \\
+    - y: int \\
+    - direction: str \\
+    \umlvirt{+ \_\_init\_\_(board, start\_x, start\_y, direction)} \\
+    + forward(): bool \\
+    + backward(): bool \\
+    + turn\_left(): None \\
+    + turn\_right(): None \\
+    + is\_wall\_forward(): bool \\
+    + is\_wall\_left(): bool \\
+    + is\_wall\_right(): bool \\
+    + is\_wall\_down(): bool \\
+    + fill\_area(): None \\
+    + print\_board(): None \\
+    - \_move\_in\_direction(direction): bool \\
+    - \_is\_wall\_in\_direction(direction): bool \\
+    - \_is\_surrounded(x, y): bool
+\end{umlclass}
+\end{tikzpicture}
+\end{document} 

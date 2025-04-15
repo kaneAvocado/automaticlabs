@@ -1,0 +1,260 @@
+\documentclass[14pt]{beamer}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{ulem}
+
+% Настройка подсветки кода
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+\usetheme{Madrid}
+\usecolortheme{default}
+
+\title{Библиотека для управления роботом и система турнира по шахматам 5×5}
+\institute{Разработка автоматизированных лабораторных работ с элементами соревнования}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Содержание}
+\tableofcontents
+\end{frame}
+
+\section{Общее описание проекта}
+
+\begin{frame}
+\frametitle{Общее описание проекта}
+\begin{itemize}
+\item Проект состоит из двух основных компонентов:
+\begin{itemize}
+\item Библиотека robotlib для управления роботом
+\item Система турнира по шахматам 5x5
+\end{itemize}
+\item Разработано на Python 3
+\item Использует современные практики программирования
+\end{itemize}
+\end{frame}
+
+\section{Библиотека robotlib}
+
+\begin{frame}
+\frametitle{Библиотека robotlib}
+\begin{block}{Основные команды}
+\begin{description}
+\item[\texttt{forward()}] Движение вперед на одну клетку
+\item[\texttt{backward()}] Движение назад на одну клетку
+\item[\texttt{turn\_left()}] Поворот на 90° влево
+\item[\texttt{turn\_right()}] Поворот на 90° вправо
+\item[\texttt{is\_wall\_*()}] Проверка наличия стены в указанном направлении
+\item[\texttt{fill\_area()}] Заливка текущей клетки
+\end{description}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Схема действий робота}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm]
+\node[draw, rounded corners] (start) {Начало};
+\node[draw, rounded corners, below of=start] (fill) {\texttt{fill\_area()}};
+\node[draw, rounded corners, below of=fill] (turn) {\texttt{turn\_right()}};
+\node[draw, rounded corners, below of=turn] (forward) {\texttt{forward()}};
+\node[draw, rounded corners, below of=forward] (end) {Конец};
+
+\draw[->] (start) -- (fill);
+\draw[->] (fill) -- (turn);
+\draw[->] (turn) -- (forward);
+\draw[->] (forward) -- (end);
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{UML-диаграмма классов робота}
+\begin{center}
+% Замените robot_class_diagram на реальное имя файла с диаграммой
+\includegraphics[width=0.8\textwidth]{robot_class_diagram}
+%\fbox{\parbox{0.8\textwidth}{\centering Здесь будет UML-диаграмма классов робота}}
+\end{center}
+\end{frame}
+
+\section{Система турнира по шахматам 5x5}
+
+\begin{frame}[fragile]
+\frametitle{Пример работы алгоритма заливки}
+\begin{columns}
+\column{0.4\textwidth}
+\begin{block}{Начальное поле}
+\begin{verbatim}
+* - # * * * * * * *
+* - # * * * * * * *
+* - # * * * * * * *
+* - # * * * * * * *
+* - # * * * * * * *
+* - # * * * * * * *
+* - # # # # # * * *
+* - - - - - - * * *
+* - * * * * * * * *
+* - * * * * * * * *
+\end{verbatim}
+\end{block}
+
+\column{0.6\textwidth}
+\begin{lstlisting}[basicstyle=\tiny]
+def autonomous_filling(self):
+    steps = 0
+    max_steps = 1000
+    last_position = None
+    stuck_counter = 0
+    
+    while self.has_unfilled_cells():
+        current_pos = (self.x, self.y)
+        
+        if current_pos == last_position:
+            stuck_counter += 1
+            if stuck_counter > 4:
+                self.turn_right()
+                stuck_counter = 0
+        else:
+            stuck_counter = 0
+            last_position = current_pos
+        
+        if not self.is_wall_forward():
+            self.forward()
+        elif not self.is_wall_left():
+            self.turn_left()
+            self.forward()
+        elif not self.is_wall_right():
+            self.turn_right()
+            self.forward()
+        else:
+            self.turn_right()
+            self.turn_right()
+            self.forward()
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Система турнира по шахматам 5x5}
+\begin{block}{Особенности}
+\begin{itemize}
+\item Доска размером 5x5
+\item Фигуры: пешки, ладьи, слоны, короли
+\item Алгоритм альфа-бета отсечения
+\item Победа при съедении короля
+\end{itemize}
+\end{block}
+
+\begin{block}{Турнирная система}
+\begin{itemize}
+\item Двухкруговой турнир
+\item Каждая пара играет 2 матча
+\item Автоматическое определение победителя
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Диаграмма последовательности турнира}
+\begin{center}
+% Замените chess_sequence на реальное имя файла с диаграммой
+\includegraphics[width=0.8\textwidth]{chess_sequence}
+%\fbox{\parbox{0.8\textwidth}{\centering Здесь будет диаграмма последовательности турнира}}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Диаграмма взаимодействия матчей}
+\begin{center}
+% Замените tournament_interaction на реальное имя файла с диаграммой
+\includegraphics[width=0.8\textwidth]{tournament_interaction}
+%\fbox{\parbox{0.8\textwidth}{\centering Здесь будет диаграмма взаимодействия матчей}}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Пример записи партии (PGN)}
+\begin{lstlisting}
+[Event "Турнир 5x5"]
+[Site "Локальный"]
+[Date "2024.04.01"]
+[Round "1"]
+[White "Игрок 1"]
+[Black "Игрок 2"]
+[Result "1-0"]
+
+1. e2-e3 d2-d3
+2. Bb1-c2 Bb4-c3
+3. Rc1-c2 Rc4-c3
+4. Kb2-c2 Kb3-c3
+5. c2-c3 c3-c4
+6. Bc2-d3 Bc3-d4
+7. Rd3-d4 1-0
+\end{lstlisting}
+\end{frame}
+
+\section{Технические детали}
+
+\begin{frame}
+\frametitle{Технические детали}
+\begin{table}
+\centering
+\begin{tabular}{ll}
+\textbf{Технология} & \textbf{Назначение} \\
+\hline
+Python 3 & Основной язык разработки \\
+Альфа-бета отсечение & Алгоритм поиска ходов \\
+NumPy & Матричные операции \\
+\end{tabular}
+\caption{Используемые технологии}
+\end{table}
+
+\begin{alertblock}{Требования к системе}
+\begin{itemize}
+\item Python 3.6+
+\item Установленные зависимости (pip install -r requirements.txt)
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Заключение}
+\begin{block}{Результаты}
+\begin{itemize}
+\item Реализована библиотека управления роботом
+\item Создана система турнира по шахматам 5x5
+\item Разработан алгоритм альфа-бета отсечения
+\item Реализована визуализация состояния
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\Huge Спасибо за внимание!
+\end{center}
+\end{frame}
+
+\end{document}
