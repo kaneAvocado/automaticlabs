@@ -3,6 +3,8 @@ from robotlib.robot import Robot
 def test_autonomous_filling():
     # Создаем поле как на картинке A
     board = Robot.create_board_A()
+
+    
     
     # Устанавливаем робота в оптимальную позицию
     start_x, start_y = 6, 6

@@ -6,7 +6,6 @@ class PieceType(Enum):
     ROOK = "R"
     BISHOP = "B"
     KING = "K"
-
     
 
 class Color(Enum):
