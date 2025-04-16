@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестирование робота</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .highlight {
+            background-color: yellow;
+        }
+        .file-info {
+            margin-top: 20px;
+        }
+        .results-table {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Тестирование робота</h1>
+        
+        <!-- Форма загрузки файлов -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Загрузка тестовых файлов</h5>
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="files" class="form-label">Выберите файлы (.py)</label>
+                        <input type="file" class="form-control" id="files" name="files" multiple accept=".py">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Загрузить и запустить тесты</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Таблица загруженных файлов -->
+        {% if uploaded_files %}
+        <div class="card file-info">
+            <div class="card-body">
+                <h5 class="card-title">Загруженные файлы</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Имя файла</th>
+                                <th>Размер</th>
+                                <th>Дата загрузки</th>
+                                <th>Статус</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for file in uploaded_files %}
+                            <tr>
+                                <td>{{ file.name }}</td>
+                                <td>{{ file.size }}</td>
+                                <td>{{ file.date }}</td>
+                                <td>{{ file.status }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Таблица результатов -->
+        {% if results %}
+        <div class="card results-table">
+            <div class="card-body">
+                <h5 class="card-title">Результаты тестирования</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Файл</th>
+                                <th>Имя</th>
+                                <th>Фамилия</th>
+                                <th>Количество шагов</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for result in results %}
+                            <tr>
+                                <td>{{ result.filename }}</td>
+                                <td class="highlight">{{ result.name }}</td>
+                                <td class="highlight">{{ result.surname }}</td>
+                                <td class="highlight">{{ result.steps }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <a href="/download" class="btn btn-success">Скачать результаты (CSV)</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
