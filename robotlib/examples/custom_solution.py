@@ -4,22 +4,57 @@ def test_autonomous_filling():
     # Создаем поле
     board = Robot.create_board_A()
     
-    # Создаем робота в начальной позиции (2, 0) - верхняя точка буквы "Г"
-    robot = Robot(board, 2, 0, 'SOUTH')
+    # Создаем робота в начальной позиции (3, 1) - верхний левый угол буквы "П"
+    robot = Robot(board, 3, 1, 'EAST')
     steps = 0
     
-    # Шаг 1: Движемся вниз по вертикальной части
+    # Шаг 1: Движемся вправо по верхней части
+    for _ in range(4):
+        robot.forward()  # Двигаемся вправо
+        steps += 1
+    
+    # Шаг 2: Поворачиваем и движемся вниз
+    robot.turn_right()
+    steps += 1
+    
     for _ in range(6):
         robot.forward()  # Двигаемся вниз
         steps += 1
     
-    # Шаг 2: Поворачиваем направо для горизонтальной части
+    # Шаг 3: Поворачиваем и движемся влево
     robot.turn_right()
     steps += 1
     
-    # Шаг 3: Движемся вправо по горизонтальной части
     for _ in range(4):
-        robot.forward()  # Двигаемся вправо
+        robot.forward()  # Двигаемся влево
+        steps += 1
+    
+    # Шаг 4: Поворачиваем и движемся вверх
+    robot.turn_right()
+    steps += 1
+    
+    for _ in range(5):
+        robot.forward()  # Двигаемся вверх
+        steps += 1
+    
+    # Шаг 5: Теперь обходим внутреннюю часть буквы "П"
+    robot.turn_right()
+    robot.forward()
+    robot.turn_right()
+    steps += 3
+    
+    for _ in range(4):
+        robot.forward()  # Двигаемся вниз
+        steps += 1
+    
+    robot.turn_left()
+    robot.forward()
+    robot.forward()
+    robot.turn_left()
+    steps += 4
+    
+    for _ in range(4):
+        robot.forward()  # Двигаемся вверх
         steps += 1
     
     # Подсчитываем штрафные шаги
@@ -34,6 +69,9 @@ def test_autonomous_filling():
         'total_steps': steps + penalty_steps  # Общее количество шагов
     }
     
+    # Печатаем доску для визуализации результата
+    robot.print_board()
+    
     return result
 
 if __name__ == '__main__':
@@ -41,4 +79,5 @@ if __name__ == '__main__':
     print(f"Результаты:")
     print(f"Шаги: {result['steps']}")
     print(f"Штрафные шаги: {result['penalty_steps']}")
-    print(f"Всего шагов: {result['total_steps']}") 
+    print(f"Всего шагов: {result['total_steps']}")
+    print(f"Имя и фамилия: {result['name']} {result['surname']}") 
