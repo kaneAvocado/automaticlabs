@@ -1,0 +1,131 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\title{Лабораторная работа: "Алгоритм движения робота в лабиринте"}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Описание задания}
+Студентам необходимо разработать алгоритм движения робота в заданном лабиринте. Робот должен закрасить все клетки, обозначенные специальным символом. Алгоритм должен быть оптимальным по количеству шагов и учитывать систему штрафов.
+
+\section{Технические требования}
+\begin{itemize}
+    \item Python 3.8 или выше
+    \item Библиотека robotlib
+    \item Flask и pandas для тестирования
+\end{itemize}
+
+\section{Шаблон решения}
+\begin{lstlisting}[language=Python]
+from robotlib.robot import Robot
+
+def test_autonomous_filling():
+    # Создаем поле
+    board = Robot.create_board_A()
+    
+    # Начальная позиция робота
+    start_x, start_y = 6, 6
+    
+    # Инициализация робота
+    robot = Robot(board, start_x, start_y, 'NORTH')
+    
+    # Запуск алгоритма
+    success = robot.autonomous_filling()
+    
+    # Возврат результатов
+    return {
+        'name': 'Имя',
+        'surname': 'Фамилия',
+        'steps': len(robot.moves_history)
+    }
+\end{lstlisting}
+
+\section{Правила турнира}
+\begin{enumerate}
+    \item Все решения собираются в единую базу
+    \item Каждое решение тестируется на одинаковом наборе лабиринтов
+    \item Результаты сортируются по эффективности
+    \item Определяются победители в соответствии с системой оценок
+\end{enumerate}
+
+\section{Система оценки}
+\begin{itemize}
+    \item Первые 20\% участников получают оценку 5
+    \item Следующие 60\% участников получают оценку 4
+    \item Оставшиеся 20\% участников получают оценку 3
+\end{itemize}
+
+\section{Ограничения и система штрафов}
+\begin{itemize}
+    \item Максимальное количество шагов: 1000
+    \item Штрафные шаги начисляются за:
+    \begin{itemize}
+        \item Каждую не закрашенную клетку (\#)
+        \item Каждую неправильно закрашенную клетку (клетка +, окруженная стенами)
+    \end{itemize}
+    \item Общий результат = количество шагов + штрафные шаги
+    \item Решение считается успешным, если:
+    \begin{itemize}
+        \item Все клетки закрашены
+        \item Количество шагов не превышает 1000
+    \end{itemize}
+\end{itemize}
+
+\section{Пример подсчета штрафов}
+\begin{lstlisting}[language=Python]
+def _count_penalty_steps(self):
+    penalty = 0
+    for y in range(len(self.board)):
+        for x in range(len(self.board[y])):
+            if self.board[y][x] == '#':  # Не закрашенная клетка
+                penalty += 1
+            elif self.board[y][x] == '+' and self._is_surrounded(x, y):
+                penalty += 1
+    return penalty
+\end{lstlisting}
+
+\section{Критерии эффективности}
+\begin{enumerate}
+    \item Количество шагов (основной критерий)
+    \item Количество штрафных шагов
+    \item Время выполнения алгоритма
+    \item Корректность заливки всех целевых клеток
+\end{enumerate}
+
+\section{Тестирование решения}
+Студенты могут тестировать свои решения:
+\begin{itemize}
+    \item Используя примеры в директории examples
+    \item Создавая собственные тестовые лабиринты
+    \item Проверяя работу на различных начальных позициях
+\end{itemize}
+
+\section{Отправка решения}
+\begin{enumerate}
+    \item Создать файл basic\_solution.py
+    \item Указать свои имя и фамилию
+    \item Отправить файл в Telegram бота по ID: 12332452234
+    \item Дождаться результатов турнира
+\end{enumerate}
+
+\section{Дополнительные требования}
+\begin{itemize}
+    \item Код должен быть читаемым и документированным
+    \item Решение должно работать для любого валидного лабиринта
+    \item Запрещено модифицировать класс Robot
+    \item Разрешено использовать любые алгоритмы поиска пути
+\end{itemize}
+
+\section{Сроки проведения}
+\begin{itemize}
+    \item Начало приема решений: [дата]
+    \item Окончание приема: [дата]
+    \item Подведение итогов: [дата]
+\end{itemize}
+
+\end{document} 
