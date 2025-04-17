@@ -3,19 +3,19 @@
     {
       "name": "advanced_solution.py",
       "size": "1.2 KB",
-      "date": "2025-04-15 18:45:47",
+      "date": "2025-04-16 20:38:56",
       "status": "Успешно"
     },
     {
-      "name": "basic_solution.py",
-      "size": "744.0 B",
-      "date": "2025-04-15 18:45:47",
+      "name": "custom_solution.py",
+      "size": "1.7 KB",
+      "date": "2025-04-16 20:38:56",
       "status": "Успешно"
     },
     {
       "name": "optimized_solution.py",
       "size": "1.1 KB",
-      "date": "2025-04-15 18:45:47",
+      "date": "2025-04-16 20:38:56",
       "status": "Успешно"
     }
   ],
@@ -31,10 +31,10 @@
     {
       "name": "Иван",
       "surname": "Иванов",
-      "steps": 13,
-      "filename": "basic_solution.py",
-      "penalty_steps": 0,
-      "total_steps": 13
+      "steps": 11,
+      "penalty_steps": 10,
+      "total_steps": 21,
+      "filename": "custom_solution.py"
     },
     {
       "name": "Петр",

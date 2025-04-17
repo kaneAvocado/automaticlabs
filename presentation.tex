@@ -62,12 +62,27 @@
 \frametitle{Библиотека robotlib}
 \begin{block}{Основные команды}
 \begin{description}
-\item[\texttt{forward()}] Движение вперед на одну клетку
-\item[\texttt{backward()}] Движение назад на одну клетку
+\item[\texttt{forward()}] Движение вперед на одну клетку, возвращает результат движения
+\item[\texttt{down()}] Движение назад на одну клетку, возвращает результат движения
 \item[\texttt{turn\_left()}] Поворот на 90° влево
 \item[\texttt{turn\_right()}] Поворот на 90° вправо
-\item[\texttt{is\_wall\_*()}] Проверка наличия стены в указанном направлении
 \item[\texttt{fill\_area()}] Заливка текущей клетки
+\end{description}
+\end{block}
+
+\begin{block}{Предикаты проверки стен}
+\begin{description}
+\item[\texttt{is\_wall\_forward()}] Проверка наличия стены впереди
+\item[\texttt{is\_wall\_left()}] Проверка наличия стены слева
+\item[\texttt{is\_wall\_right()}] Проверка наличия стены справа
+\item[\texttt{is\_wall\_down()}] Проверка наличия стены сзади
+\end{description}
+\end{block}
+
+\begin{block}{Предикаты проверки состояния}
+\begin{description}
+\item[\texttt{has\_unfilled\_cells()}] Проверка наличия незакрашенных клеток
+\item[\texttt{autonomous\_filling()}] Автоматическая заливка поля
 \end{description}
 \end{block}
 \end{frame}
@@ -235,6 +250,40 @@ NumPy & Матричные операции \\
 \begin{itemize}
 \item Python 3.6+
 \item Установленные зависимости (pip install -r requirements.txt)
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Требования к файлу оценки шахматной позиции}
+\begin{block}{Структура файла}
+\begin{itemize}
+\item Файл с расширением `.py`
+\item Обязательная функция `evaluate_position(board, color)`
+\item Параметры:
+  \begin{itemize}
+  \item `board` - объект доски
+  \item `color` - цвет игрока (Color.WHITE или Color.BLACK)
+  \end{itemize}
+\end{itemize}
+\end{block}
+
+\begin{block}{Возвращаемое значение}
+\begin{itemize}
+\item Числовое значение (float или int)
+\item Положительное - преимущество для указанного цвета
+\item Отрицательное - преимущество для противника
+\item Нулевое - равная позиция
+\end{itemize}
+\end{block}
+
+\begin{alertblock}{Ограничения}
+\begin{itemize}
+\item Нельзя изменять состояние доски
+\item Запрещены внешние ресурсы
+\item Запрещены случайные числа
+\item Запрещены глобальные переменные
+\item Ограничение по времени выполнения
 \end{itemize}
 \end{alertblock}
 \end{frame}

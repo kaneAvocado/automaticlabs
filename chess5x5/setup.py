@@ -12,8 +12,8 @@ setup(
     ],
     author="Your Name",
     author_email="your.email@example.com",
-    description="Система для проведения турнира по шахматам на доске 5x5",
-    long_description=open("README.md").read(),
+    description="Chess 5x5 tournament system",
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/yourusername/chess5x5",
     classifiers=[
