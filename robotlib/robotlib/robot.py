@@ -188,7 +188,7 @@ class Robot:
     def autonomous_filling(self):
         """Улучшенный алгоритм автономной заливки."""
         steps = 0
-        max_steps = 1000  # Увеличенный лимит шагов
+        max_steps = 50  # Увеличенный лимит шагов
         last_position = None
         stuck_counter = 0
         
