@@ -1,1 +1,434 @@
- 
+\documentclass[14pt]{beamer}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{ulem}
+\usepackage{verbatim}
+
+% Настройка подсветки кода
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{green},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    tabsize=4
+}
+
+\usetheme{default}
+\usecolortheme{default}
+
+\title{Разработка автоматизированных лабораторных работ с элементами соревнования}
+\author{}
+\institute{}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Содержание}
+\tableofcontents
+\end{frame}
+
+\section{Общее описание проекта}
+
+\begin{frame}
+\frametitle{Общее описание проекта}
+\begin{itemize}
+\item Проект состоит из двух компонентов(лабораторных):
+\begin{itemize}
+\item \textbf{robotlib} - задание перемещения робота с помощью предикат.
+\item \textbf{chess5x5} - модификация функции оценки.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Цели и требования}
+
+\begin{frame}
+\frametitle{Лабораторная работа: Управление роботом (robotlib)}
+\begin{block}{Цель работы}
+Разработать алгоритм автономной заливки для робота, который должен заполнить определенные клетки на поле за минимальное количество шагов.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Лабораторная работа: Шахматы 5x5 (chess5x5)}
+\begin{block}{Цель работы}
+Модифицировать функцию оценки позиции для шахматной игры на доске 5x5, чтобы улучшить качество игры компьютерного противника.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Исходные данные}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{block}{robotlib}
+\begin{itemize}
+\item Библиотека для управления роботом
+\item Поле с определенной конфигурацией
+\item Базовые команды управления
+\item Примеры реализации
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{chess5x5}
+\begin{itemize}
+\item Шахматная доска 5x5
+\item Базовый движок с альфа-бета отсечением
+\item Функция оценки позиции
+\item Примеры реализации
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Что должны сделать студенты}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{block}{robotlib}
+\begin{itemize}
+\item Написать код для закрашивания клеток
+\item Минимизировать количество шагов
+\item Указать имя и фамилию в файле
+\item Отправить решение до 23:59 18.04.25
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{chess5x5}
+\begin{itemize}
+\item Модифицировать функцию evaluate\_position
+\item Улучшить оценку позиции
+\item Назвать файл транслитом имени
+\item Отправить решение до 23:59 18.04.25
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Что получится}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{block}{robotlib}
+\begin{itemize}
+\item Python-файл с алгоритмом
+\item Автоматическая заливка области
+\item Минимальное количество шагов
+\item Результаты тестирования
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{chess5x5}
+\begin{itemize}
+\item Улучшенная функция оценки
+\item Более сильная игра движка
+\item Турнирная таблица результатов
+\item Статистика партий
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Как оценивается}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{block}{robotlib}
+\begin{itemize}
+\item Количество шагов
+\item Корректность заливки
+\item Оптимальность алгоритма
+\item Срок сдачи
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{chess5x5}
+\begin{itemize}
+\item Качество оценки позиции
+\item Результаты турнира
+\item Оптимальность алгоритма
+\item Срок сдачи
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\section{Библиотека robotlib}
+
+\begin{frame}
+\frametitle{Библиотека robotlib}
+Вам предстоит закрасить определенные клетки на поле за наименьшее количество шагов.
+\includegraphics[width=0.6\textwidth]{labitint.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Библиотека robotlib}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{block}{Основные команды}
+\begin{description}[<+->]
+\item[\texttt{forward()}] Движение вперед
+\item[\texttt{backward()}] Движение назад
+\item[\texttt{turn\_left()}] Поворот влево
+\item[\texttt{turn\_right()}] Поворот вправо
+\item[\texttt{is\_wall()}] Проверка стены
+% \item[\texttt{fill\_area()}] Заливка клетки
+\end{description}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{exampleblock}{Пример кода}
+\begin{lstlisting}[basicstyle=\tiny]
+robot = Robot()
+robot.forward()
+if not robot.is_wall_left():
+    robot.turn_left()
+    robot.forward()
+robot.fill_area()
+\end{lstlisting}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+% \begin{frame}
+% \frametitle{Схема действий робота}
+% \begin{center}
+% \begin{tikzpicture}[node distance=1.5cm, auto]
+% \node[draw, rounded corners] (start) {Начало};
+% \node[draw, rounded corners, below of=start] (fill) {\texttt{fill\_area()}};
+% \node[draw, diamond, below of=fill, aspect=2] (decision) {Стена?};
+% \node[draw, rounded corners, right of=decision, node distance=3cm] (turn) {\texttt{turn\_right()}};
+% \node[draw, rounded corners, below of=decision, node distance=2cm] (forward) {\texttt{forward()}};
+% \node[draw, rounded corners, below of=forward] (end) {Конец};
+
+% \draw[->] (start) -- (fill);
+% \draw[->] (fill) -- (decision);
+% \draw[->] (decision) -- node[near start] {Да} (turn);
+% \draw[->] (turn) |- (forward);
+% \draw[->] (decision) -- node[near start] {Нет} (forward);
+% \draw[->] (forward) -- (end);
+% \end{tikzpicture}
+% \end{center}
+% \end{frame}
+
+\begin{frame}
+\frametitle{UML-диаграмма классов робота}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{robot_class_diagram}
+\footnotesize{Рис. 1. Диаграмма классов системы управления роботом}
+\end{center}
+\end{frame}
+
+\section{Система турнира по шахматам 5x5}
+
+\begin{frame}[fragile]
+\frametitle{Пример работы алгоритма}
+\begin{columns}
+\column{0.4\textwidth}
+\begin{exampleblock}{Начальное поле}
+\begin{verbatim}
+* - # * * * * * * *
+* - # * * * * * * *
+* - # * * * * * * *
+* - # * * * * * * *
+* - # * * * * * * *
+* - # * * * * * * *
+* - # # # # # < * *
+* - - - - - - * * *
+* - * * * * * * * *
+* - * * * * * * * *
+\end{verbatim}
+\end{exampleblock}
+
+\column{0.6\textwidth}
+\begin{alertblock}{Алгоритм}
+\begin{lstlisting}[basicstyle=\tiny]
+def autonomous_filling():
+    while has_unfilled():
+        if not is_wall_forward():
+            forward()
+        elif not is_wall_left():
+            turn_left()
+        elif not is_wall_right():
+            turn_right()
+        else:
+            turn_around()
+        if current_cell_empty():
+            fill_cell()
+\end{lstlisting}
+\end{alertblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Пример работы алгоритма}
+\begin{columns}
+\column{0.4\textwidth}
+\begin{exampleblock}{Конечное поле}
+\begin{verbatim}
+* - < * * * * * * *
+* - + * * * * * * *
+* - + * * * * * * *
+* - + * * * * * * *
+* - + * * * * * * *
+* - + * * * * * * *
+* - + + + + + * * *
+* - - - - - - * * *
+* - * * * * * * * *
+* - * * * * * * * *
+\end{verbatim}
+\end{exampleblock}
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{Шахматный турнир 5x5}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\begin{block}{Особенности}
+\begin{itemize}
+\item Упрощенные правила
+\item Быстрые партии
+\item Автоматический арбитр
+\item Рейтинговая система
+\end{itemize}
+\end{block}
+
+\column{0.5\textwidth}
+\begin{block}{Турнирная система}
+\begin{itemize}
+\item Круговой турнир
+\item Контроль времени
+\item Статистика
+\item Визуализация
+\end{itemize}
+\end{block}
+\end{columns}
+
+\begin{exampleblock}{Преимущества}
+\begin{itemize}
+\item Простота освоения
+\item Быстрое проведение
+\item Объективность
+\end{itemize}
+\end{exampleblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Архитектура системы}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{chess_sequence}
+\footnotesize{Рис. 2. Диаграмма последовательности турнира}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Пример записи партии}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{lstlisting}[basicstyle=\tiny]
+[Event "Турнир 5x5"]
+[Site "Локальный"]
+[Date "2024.04.01"]
+[Round "1"]
+[White "Игрок 1"]
+[Black "Игрок 2"]
+[Result "1-0"]
+
+1. e2-e3 d2-d3
+2. Bb1-c2 Bb4-c3
+3. Rc1-c2 Rc4-c3
+4. Kb2-c2 Kb3-c3
+5. c2-c3 c3-c4
+6. Bc2-d3 Bc3-d4
+7. Rd3-d4 1-0
+\end{lstlisting}
+
+\column{0.5\textwidth}
+\begin{block}{Особенности формата}
+\begin{itemize}
+\item Компактная запись
+\item Читаемость
+\item Поддержка анализа
+\item Совместимость
+\end{itemize}
+\end{block}
+\end{columns}
+\end{frame}
+
+\section{Технические детали}
+
+\begin{frame}
+\frametitle{Технологический стек}
+\begin{table}
+\centering
+\begin{tabular}{ll}
+\textbf{Технология} & \textbf{Назначение} \\
+\hline
+% Python 3.10+ & Основной язык \\
+% NumPy & Матричные операции \\
+% PyGame & Визуализация \\
+% SQLite & Хранение данных \\
+\end{tabular}
+\end{table}
+
+\begin{alertblock}{Требования}
+\begin{itemize}
+\item Кроссплатформенность
+\item Минимальные зависимости
+\item Простота развертывания
+\end{itemize}
+\end{alertblock}
+\end{frame}
+
+\section{Заключение}
+
+\begin{frame}
+\frametitle{Результаты проекта}
+\begin{block}{Достижения}
+\begin{itemize}
+\item Полностью рабочая система
+\item Документация и примеры
+\item Тестовые сценарии
+\item Готовность к внедрению
+\end{itemize}
+\end{block}
+
+\begin{block}{Перспективы}
+\begin{itemize}
+\item Расширение функционала
+\item Поддержка новых форматов
+\item Интеграция с LMS
+\item Развитие сообщества
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{center}
+\Huge Спасибо за внимание!\\
+\vspace{1cm}
+\large Вопросы?
+\end{center}
+\end{frame}
+
+\end{document}
