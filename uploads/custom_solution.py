@@ -58,15 +58,18 @@ def test_autonomous_filling():
         steps += 1
     
     # Подсчитываем штрафные шаги
-    penalty_steps = robot._count_penalty_steps()
+    penalty_info = robot._count_penalty_steps()
     
     # Формируем результат
     result = {
         'name': 'Иван',  # Имя студента
         'surname': 'Иванов',  # Фамилия студента
         'steps': steps,  # Количество шагов
-        'penalty_steps': penalty_steps,  # Штрафные шаги
-        'total_steps': steps + penalty_steps  # Общее количество шагов
+        'penalty_steps': penalty_info['penalty'],  # Штрафные шаги
+        'total_steps': steps + penalty_info['penalty'],  # Общее количество шагов
+        'total_target_cells': penalty_info['total_target_cells'],  # Всего клеток для закрашивания
+        'unfilled_cells': penalty_info['unfilled_cells'],  # Незакрашенные клетки
+        'extra_filled_cells': penalty_info['extra_filled_cells']  # Лишние закрашенные клетки
     }
     
     # Печатаем доску для визуализации результата
@@ -80,4 +83,7 @@ if __name__ == '__main__':
     print(f"Шаги: {result['steps']}")
     print(f"Штрафные шаги: {result['penalty_steps']}")
     print(f"Всего шагов: {result['total_steps']}")
+    print(f"Всего клеток для закрашивания: {result['total_target_cells']}")
+    print(f"Незакрашенных клеток: {result['unfilled_cells']}")
+    print(f"Лишних закрашенных клеток: {result['extra_filled_cells']}")
     print(f"Имя и фамилия: {result['name']} {result['surname']}") 

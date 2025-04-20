@@ -8,6 +8,13 @@ class Robot:
         self.visited = set()  # Множество для отслеживания посещенных клеток
         self.moves_history = []  # Список для хранения истории ходов
         self.board_states = []  # Список для хранения состояний поля
+        self.target_cells = set()  # Множество для хранения координат клеток, которые нужно закрасить
+        
+        # Находим все клетки, которые нужно закрасить
+        for y in range(len(self.board)):
+            for x in range(len(self.board[y])):
+                if self.board[y][x] == '#':
+                    self.target_cells.add((x, y))
         
         # Проверка начальной позиции
         if not (0 <= self.y < len(self.board) and 0 <= self.x < len(self.board[self.y])):
@@ -185,6 +192,41 @@ class Robot:
                 return True
         return False
 
+    def _count_penalty_steps(self):
+        """Подсчитывает количество штрафных шагов за неверно закрашенные клетки"""
+        penalty = 0
+        unfilled_cells = 0
+        extra_filled_cells = 0
+        
+        # Находим все закрашенные клетки
+        filled_cells = set()
+        for y in range(len(self.board)):
+            for x in range(len(self.board[y])):
+                if self.board[y][x] == '+':
+                    filled_cells.add((x, y))
+        
+        # Проверяем незакрашенные целевые клетки
+        for cell in self.target_cells:
+            if cell not in filled_cells:
+                unfilled_cells += 1
+                penalty += 1
+        
+        # Проверяем лишние закрашенные клетки
+        for cell in filled_cells:
+            if cell not in self.target_cells:
+                extra_filled_cells += 1
+                penalty += 1
+        
+        # Добавляем информацию о штрафах в результат
+        result = {
+            'penalty': penalty,
+            'total_target_cells': len(self.target_cells),
+            'unfilled_cells': unfilled_cells,
+            'extra_filled_cells': extra_filled_cells
+        }
+        
+        return result
+
     def autonomous_filling(self):
         """Улучшенный алгоритм автономной заливки."""
         steps = 0
@@ -222,31 +264,23 @@ class Robot:
             steps += 1
         
             # Подсчет штрафных шагов
-            penalty_steps = self._count_penalty_steps()
-            total_steps = steps + penalty_steps
+            penalty_info = self._count_penalty_steps()
+            total_steps = steps + penalty_info['penalty']
             
             # Вывод результатов
             print("\nРезультаты выполнения:")
             print("-" * 40)
             print(f"Количество выполненных шагов: {steps}")
-            print(f"Количество штрафных шагов: {penalty_steps}")
+            print(f"Количество штрафных шагов: {penalty_info['penalty']}")
             print(f"Общее количество шагов с учетом штрафов: {total_steps}")
+            print(f"Всего клеток для закрашивания: {penalty_info['total_target_cells']}")
+            print(f"Незакрашенных клеток: {penalty_info['unfilled_cells']}")
+            print(f"Лишних закрашенных клеток: {penalty_info['extra_filled_cells']}")
             print(f"Успешность выполнения: {'Да' if steps < max_steps else 'Нет'}")
             print(f"Остались ли не закрашенные клетки: {'Да' if self.has_unfilled_cells() else 'Нет'}")
             print("-" * 40)
         
         return steps < max_steps  # Возвращаем True, если заливка успешно завершена
-
-    def _count_penalty_steps(self):
-        """Подсчитывает количество штрафных шагов за неверно закрашенные клетки"""
-        penalty = 0
-        for y in range(len(self.board)):
-            for x in range(len(self.board[y])):
-                if self.board[y][x] == '#':  # Не закрашенная клетка
-                    penalty += 1
-                elif self.board[y][x] == '+' and self._is_surrounded(x, y):  # Неверно закрашенная клетка
-                    penalty += 1
-        return penalty
 
     def print_moves(self):
         """Выводит все ходы робота в читаемом формате"""
