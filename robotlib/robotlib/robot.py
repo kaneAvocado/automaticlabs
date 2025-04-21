@@ -23,9 +23,6 @@ class Robot:
             raise ValueError("Robot cannot start on a wall")
         else:
             self.visited.add((self.x, self.y))
-            if self.board[self.y][self.x] == '#':
-                self.board[self.y][self.x] = '+'
-                self._add_move("fill", self.x, self.y)
             # Сохраняем начальное состояние
             self._save_board_state()
 
@@ -93,11 +90,7 @@ class Robot:
             if self.board[new_y][new_x] != '-':
                 self.x, self.y = new_x, new_y
                 self.visited.add((self.x, self.y))
-                if self.board[self.y][self.x] == '#':
-                    self.board[self.y][self.x] = '+'
-                    self._add_move("fill", self.x, self.y)
-                else:
-                    self._add_move("move", self.x, self.y)
+                self._add_move("move", self.x, self.y)
                 return True
         return False
 
@@ -357,3 +350,11 @@ class Robot:
             ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*']
         ]
         return board
+
+    def fill(self):
+        """Закрашивает текущую клетку, если она незакрашенная"""
+        if self.board[self.y][self.x] == '#':
+            self.board[self.y][self.x] = '+'
+            self._add_move("fill", self.x, self.y)
+            return True
+        return False

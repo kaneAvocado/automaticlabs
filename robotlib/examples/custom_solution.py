@@ -8,9 +8,10 @@ def test_autonomous_filling():
     robot = Robot(board, 3, 1, 'EAST')
     steps = 0
     
-    # Шаг 1: Движемся вправо по верхней части
+    # Шаг 1: Движемся вправо по верхней части и закрашиваем
     for _ in range(4):
         robot.forward()  # Двигаемся вправо
+        robot.fill()     # Закрашиваем текущую клетку
         steps += 1
     
     # Шаг 2: Поворачиваем и движемся вниз
@@ -19,6 +20,7 @@ def test_autonomous_filling():
     
     for _ in range(6):
         robot.forward()  # Двигаемся вниз
+        robot.fill()     # Закрашиваем текущую клетку
         steps += 1
     
     # Шаг 3: Поворачиваем и движемся влево
@@ -27,6 +29,7 @@ def test_autonomous_filling():
     
     for _ in range(4):
         robot.forward()  # Двигаемся влево
+        robot.fill()     # Закрашиваем текущую клетку
         steps += 1
     
     # Шаг 4: Поворачиваем и движемся вверх
@@ -35,6 +38,7 @@ def test_autonomous_filling():
     
     for _ in range(5):
         robot.forward()  # Двигаемся вверх
+        robot.fill()     # Закрашиваем текущую клетку
         steps += 1
     
     # Шаг 5: Теперь обходим внутреннюю часть буквы "П"
@@ -45,6 +49,7 @@ def test_autonomous_filling():
     
     for _ in range(4):
         robot.forward()  # Двигаемся вниз
+        robot.fill()     # Закрашиваем текущую клетку
         steps += 1
     
     robot.turn_left()
@@ -55,6 +60,7 @@ def test_autonomous_filling():
     
     for _ in range(4):
         robot.forward()  # Двигаемся вверх
+        robot.fill()     # Закрашиваем текущую клетку
         steps += 1
     
     # Подсчитываем штрафные шаги
@@ -74,6 +80,15 @@ def test_autonomous_filling():
     
     # Печатаем доску для визуализации результата
     robot.print_board()
+    
+    # Выводим подробную информацию о закрашивании
+    print("\nИнформация о закрашивании:")
+    print("-" * 40)
+    print(f"Всего клеток для закрашивания: {result['total_target_cells']}")
+    print(f"Незакрашенных клеток: {result['unfilled_cells']}")
+    print(f"Лишних закрашенных клеток: {result['extra_filled_cells']}")
+    print(f"Успешность закрашивания: {'Да' if result['unfilled_cells'] == 0 else 'Нет'}")
+    print("-" * 40)
     
     return result
 
