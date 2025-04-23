@@ -40,4 +40,9 @@ ENV/
 
 # System Files
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Project specific
+uploads/
+examples/ 
+robotlib/examples/basic_solution.py

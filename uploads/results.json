@@ -1,51 +1,52 @@
 {
   "uploaded_files": [
     {
-      "name": "advanced_solution.py",
-      "size": "1.2 KB",
-      "date": "2025-04-20 14:32:14",
+      "name": "basic_solution.py",
+      "size": "3.3 KB",
+      "date": "2025-04-23 16:18:20",
       "status": "Успешно"
     },
     {
-      "name": "custom_solution.py",
-      "size": "3.2 KB",
-      "date": "2025-04-20 14:32:14",
+      "name": "basic2_solution.py",
+      "size": "3.3 KB",
+      "date": "2025-04-23 16:18:20",
       "status": "Успешно"
     },
     {
-      "name": "optimized_solution.py",
-      "size": "1.1 KB",
-      "date": "2025-04-20 14:32:14",
+      "name": "lab2.py",
+      "size": "5.8 KB",
+      "date": "2025-04-23 16:18:20",
       "status": "Успешно"
     }
   ],
   "test_results": [
     {
-      "name": "Сергей",
-      "surname": "Сергеев",
-      "steps": 24,
-      "filename": "advanced_solution.py",
+      "name": "Анна",
+      "surname": "Жученко",
+      "steps": 468,
+      "penalty": 0,
+      "filename": "basic_solution.py",
       "penalty_steps": 0,
-      "total_steps": 24
+      "total_steps": 468
     },
     {
-      "name": "Иван",
-      "surname": "Иванов",
-      "steps": 37,
-      "penalty_steps": 10,
-      "total_steps": 47,
+      "name": "Михаил",
+      "surname": "Бугайцев",
+      "steps": 145,
+      "filename": "basic2_solution.py",
+      "penalty_steps": 0,
+      "total_steps": 145
+    },
+    {
+      "name": "Валентина",
+      "surname": "Муталимова",
+      "steps": 129,
+      "penalty_steps": 0,
+      "total_steps": 129,
       "total_target_cells": 20,
-      "unfilled_cells": 10,
+      "unfilled_cells": 0,
       "extra_filled_cells": 0,
-      "filename": "custom_solution.py"
-    },
-    {
-      "name": "Петр",
-      "surname": "Петров",
-      "steps": 24,
-      "filename": "optimized_solution.py",
-      "penalty_steps": 0,
-      "total_steps": 24
+      "filename": "lab2.py"
     }
   ]
 }
