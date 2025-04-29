@@ -2,6 +2,7 @@ from typing import List, Tuple, Optional, Callable
 from .board import Board, Color, PieceType
 from .ai import AlphaBetaAI
 from .evaluation import create_evaluation_function
+from copy import deepcopy
 
 class Game:
     def __init__(self, white_eval: Callable, black_eval: Callable):
@@ -28,19 +29,14 @@ class Game:
                     moves = self.board.get_legal_moves(row, col)
                     for move_row, move_col in moves:
                         # Сохраняем текущее состояние
-                        original_piece = self.board.get_piece(move_row, move_col)
-                        self.board.move_piece((row, col), (move_row, move_col))
+                        board_copy = deepcopy(self.board)
+                        board_copy.move_piece((row, col), (move_row, move_col))
                         
                         # Оцениваем позицию
-                        score = eval_func(self.board, self.current_player)
+                        score = eval_func(board_copy, self.current_player)
                         if score > best_score:
                             best_score = score
                             best_move = ((row, col), (move_row, move_col))
-                            
-                        # Возвращаем доску в исходное состояние
-                        self.board.move_piece((move_row, move_col), (row, col))
-                        if original_piece:
-                            self.board.board[move_row][move_col] = original_piece
         
         if best_move:
             from_pos, to_pos = best_move
