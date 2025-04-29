@@ -17,7 +17,7 @@ class Tournament:
         Проводит круговой турнир и возвращает отсортированный список результатов
         """
         n = len(self.participants)
-        total_matches = n * (n - 1) * 2  # Каждый с каждым дважды
+        total_matches = n * (n - 1)  # Каждый с каждым дважды
         current_match = 0
         
         print(f"\n=== Начало турнира ===")
@@ -32,20 +32,9 @@ class Tournament:
                     current_match += 1
                     print(f"\nМатч {current_match}/{total_matches}")
                     print(f"{self.participants[i][0]} (белые) vs {self.participants[j][0]} (черные)")
-                    # Первый матч: i играет белыми
                     self._play_match(
                         self.participants[i][0], self.participants[i][1],
                         self.participants[j][0], self.participants[j][1],
-                        Color.WHITE
-                    )
-                    
-                    current_match += 1
-                    print(f"\nМатч {current_match}/{total_matches}")
-                    print(f"{self.participants[j][0]} (белые) vs {self.participants[i][0]} (черные)")
-                    # Второй матч: j играет белыми
-                    self._play_match(
-                        self.participants[j][0], self.participants[j][1],
-                        self.participants[i][0], self.participants[i][1],
                         Color.WHITE
                     )
         
