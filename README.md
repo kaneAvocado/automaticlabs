@@ -46,10 +46,8 @@
    ```bash
    pip install -r requirements.txt
    ```
-3. Запустите тесты:
-   ```bash
-   python -m pytest
-   ```
+3. Запустите:
+(будет дополнено)
 
 ## Участие в разработке
 
